@@ -47,44 +47,50 @@ void mergeSort(int *arr, int beg, int end)
     }
 }
 
-void worst(int arr[], int beg, int end)
-{
-    if (beg < end)
-    {
-        // Create two temporary arrays
-        int n = end - beg + 1;
-        int a[n / 2 + n % 2];
-        int b[n / 2];
+// void worst(int arr[], int beg, int end)
+// {
+//     int n = end - beg + 1;
+//     int idx = 0;
+//     // Fill odds first
+//     for (int i = beg + 1; i <= end + 1; i++) {
+//         if (i % 2 != 0) {
+//             arr[idx++] = i;
+//         }
+//     }
+//     // Then fill evens
+//     for (int i = beg + 1; i <= end + 1; i++) {
+//         if (i % 2 == 0) {
+//             arr[idx++] = i;
+//         }
+//     }
+// }
+void worst(int *arr,int l, int r) {
+    if (l >= r)
+        return;
 
-        // Distribute alternate elements of arr into a and b
-        int i_a = 0, i_b = 0;
-        for (int i = beg; i <= end; i++)
-        {
-            if ((i - beg) % 2 == 0)
-            {
-                a[i_a++] = arr[i];
-            }
-            else
-            {
-                b[i_b++] = arr[i];
-            }
-        }
+    int m = (l + r) / 2;
+    int n1 = m - l + 1;
+    int n2 = r - m;
 
-        // Recurse on the two halves
-        worst(a, 0, i_a - 1);
-        worst(b, 0, i_b - 1);
+    int a[n1], b[n2];
 
-        // Copy the rearranged elements from a and b back into arr
-        int k = beg;
-        for (int i = 0; i < i_a; i++)
-        {
-            arr[k++] = a[i];
-        }
-        for (int i = 0; i < i_b; i++)
-        {
-            arr[k++] = b[i];
-        }
+    // Split even and odd indices
+    for (int i = 0; i < r - l + 1; i++) {
+        if (i % 2 == 0)
+            a[i / 2] = arr[l + i];
+        else
+            b[i / 2] = arr[l + i];
     }
+
+    //Recursively split subarrays
+    worst( a,0, n1 - 1);
+    worst(b,0, n2- 1);
+
+    // Copy back into original array
+    for (int i = 0; i < n1; i++)
+        arr[l + i] = a[i];
+    for (int i = 0; i < n2; i++)
+        arr[l + n1 + i] = b[i];
 }
 
 void tester()
@@ -127,7 +133,7 @@ void plotter()
         count = 0;
         worst(arr, 0, n - 1);
         for (int i = 0; i < n; i++)
-            fprintf(f4, "%d", *(arr + i));
+            fprintf(f4, "%d ", *(arr + i));
         fprintf(f4, "\n");
         mergeSort(arr, 0, n - 1); // worst case
         fprintf(f2, "%d\t%d\n", n, count);

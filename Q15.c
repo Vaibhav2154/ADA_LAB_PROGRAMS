@@ -10,6 +10,7 @@ typedef struct pair
     int val;
 } *Pair;
 
+
 Pair createPair(int n, int val)
 {
     Pair p = (Pair)malloc(sizeof(struct pair));
@@ -119,7 +120,7 @@ int *dikstras(int n, int adjMat[n][n], int source, int dist[])
 
     while (pq->currSize != 0)
     {
-        Pair curr = delete (pq);
+        Pair curr = delete(pq);
         if (!vis[curr->node])
         {
             vis[curr->node] = 1;
